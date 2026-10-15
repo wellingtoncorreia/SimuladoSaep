@@ -1,0 +1,1695 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>📦 Sistema Full-Stack: Controlo de Stock (Guia Definitivo SAEP - Arquitetura Limpa e CRUD Completo)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+	/* Paint a complete callout box on every PDF page fragment. */
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="3faf74c6-528d-801c-8182-d0f1f5a15bf3" class="page sans"><header><h1 class="page-title" dir="auto">📦 Sistema Full-Stack: Controlo de Stock (Guia Definitivo SAEP - Arquitetura Limpa e CRUD Completo)</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><p id="3faf74c6-528d-8086-937a-e807562d5e6d" class="" dir="auto">Este material detalha a construção estruturada do sistema de controlo de stock, garantindo que todas as entidades (Utilizador, Produto e Movimentação) possuam o ciclo CRUD completo com as suas responsabilidades rigidamente separadas. Este tutorial contém 100% do código e documentação necessários para a prova prática.</p><h2 id="3faf74c6-528d-800d-b8b5-d9e998990109" class="" dir="auto">🛠️ Fase 0: Preparação do Ambiente e Instalação</h2><p id="3faf74c6-528d-80af-8c34-e1b1afb0399b" class="" dir="auto"><strong>1. Criar o projeto base (Next.js):</strong></p><p id="3faf74c6-528d-8086-a4c4-f85004abddbf" class="" dir="auto">Abra o terminal e gere a estrutura inicial:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3faf74c6-528d-80ab-b53e-dac277f81f58" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npx create-next-app@latest controlo-stock
+cd controlo-stock</code></pre><p id="3faf74c6-528d-8055-9271-cac872c23691" class="" dir="auto"><strong>2. Instalar as dependências do Frontend e Backend:</strong></p><pre id="3faf74c6-528d-80ce-88fa-ee29884778ae" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npm install axios sweetalert2
+npm install @prisma/client@5
+npm install prisma@5 --save-dev</code></pre><p id="3faf74c6-528d-8064-8689-f3e13b5deccd" class="" dir="auto"><strong>3. Inicializar o Prisma:</strong></p><pre id="3faf74c6-528d-80ef-a07f-c739d8a572be" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npx prisma init</code></pre><h2 id="3faf74c6-528d-8047-84be-ed2ea5a82869" class="" dir="auto">🗄️ Fase 1: Base de Dados e Testes (Entregas 1, 2, 3, 8 e 9)</h2><h3 id="3faf74c6-528d-80c8-b32c-c460a0af5b3e" class="" dir="auto">1. Configuração do Prisma (<code>prisma/schema.prisma</code> e <code>.env</code>)</h3><p id="3faf74c6-528d-8035-993a-fc450329cc8d" class="" dir="auto">No ficheiro <code>.env</code>, configure a ligação ao MySQL:</p><pre id="3faf74c6-528d-802d-badc-e125914a3d4e" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">DATABASE_URL=&quot;mysql://root:123456789@localhost:3306/saep_db&quot;</code></pre><p id="3faf74c6-528d-80cd-a8f4-cf5f4bcbf2c8" class="" dir="auto">No ficheiro <code>prisma/schema.prisma</code>:</p><pre id="3faf74c6-528d-802c-8240-f8bfc1955deb" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">generator client {
+  provider = &quot;prisma-client-js&quot;
+}
+
+datasource db {
+  provider = &quot;mysql&quot;
+  url      = env(&quot;DATABASE_URL&quot;)
+}
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  nome     String @db.VarChar(255)
+  email    String @unique @db.VarChar(255)
+  senha    String @db.VarChar(255)
+  movimentacoes Movimentacao[]
+  @@map(&quot;Usuario&quot;)
+}
+
+model Produto {
+  id             Int     @id @default(autoincrement())
+  codigo         String  @unique @db.VarChar(50)
+  descricao      String  @db.VarChar(255)
+  quantidade     Int     @default(0)
+  valor_unitario Decimal @db.Decimal(10,2)
+  estoque_minimo Int     @default(10)
+  movimentacoes Movimentacao[]
+  @@map(&quot;Produto&quot;)
+}
+
+model Movimentacao {
+  id                Int      @id @default(autoincrement())
+  produto_id        Int
+  usuario_id        Int
+  tipo              TipoMovimentacao
+  quantidade        Int
+  data_movimentacao DateTime @default(now())
+  produto Produto @relation(fields: [produto_id], references: [id])
+  usuario Usuario @relation(fields: [usuario_id], references: [id])
+  @@map(&quot;Movimentacao&quot;)
+}
+
+enum TipoMovimentacao {
+  ENTRADA
+  SAIDA
+}</code></pre><p id="3faf74c6-528d-80dd-856b-fed6a3e2bba0" class="" dir="auto">Execute a migração: </p><pre id="3faf74c6-528d-8095-ba85-c8feae12e71a" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">npx prisma migrate dev --name init_tabelas</code></pre><p id="3faf74c6-528d-804e-a50b-ed6d62e4a146" class="" dir="auto"><strong>Instância Global do Prisma (</strong><code><strong>src/lib/prisma.ts</strong></code><strong>):</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" integrity="sha512-m3JYEI6gx5fh9jF10FjGoMzVKcV2N6nchcDcqPCdI1L3R2WQV7br2XVNR8iTLb2daOMRl3zldbcfT40xU2ntVw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js" integrity="sha512-uOw7XYETzS/DPmmirpP5UCMihSDNMeyTS965J0/456OSPfxn9xEtHHjj5Q/5WefVdqyMfN/afmQnNpZd/tpkcA==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js" integrity="sha512-xjGCJ9YxyZBfYTCHsEjkOZMoOse1W3cKMXv1szXrxs68myuXt0YTj3/xKPar6iDMlXzTUSEqwUxprWcyp+plaw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3faf74c6-528d-809d-ba6b-ce7e714c760f" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { PrismaClient } from &#x27;@prisma/client&#x27;;
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+export const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== &#x27;production&#x27;) globalForPrisma.prisma = prisma;
+export default prisma;</code></pre><h3 id="3faf74c6-528d-8019-879c-c588e18cac34" class="" dir="auto">💡 Dica Extra: Inserir Utilizador Inicial via Prisma Studio</h3><p id="3faf74c6-528d-8079-a34d-cdc69d599f14" class="" dir="auto"><br/>O Prisma possui uma interface gráfica embutida que permite gerir a base de dados pelo navegador de forma muito visual. Siga estes passos para criar o utilizador de login inicial sem precisar de escrever código:</p><p id="3faf74c6-528d-803c-85bb-d749de6a7fb8" class="" dir="auto">1. No terminal, execute o comando:</p><pre id="3faf74c6-528d-8024-834b-d107cc9f1e97" class="code code-wrap" data-notion-code-syntax="bash"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">   npx prisma studio</code></pre><p id="3faf74c6-528d-805b-bdd7-d5499992a32f" class="" dir="auto">O seu navegador vai abrir automaticamente no endereço <code>http://localhost:5555</code>.</p><ul id="3faf74c6-528d-80a9-ba25-f68455e71eaa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Clique no modelo <strong>Usuario</strong>.</li></ul><ul id="3faf74c6-528d-80a3-9aca-ec1b8b63ad6b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Clique no botão <strong>Add record</strong> (Adicionar registo).</li></ul><ul id="3faf74c6-528d-80d9-81fb-cb4bfbf53495" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Preencha os campos <strong>nome</strong>, <strong>email</strong> e <strong>senha</strong> com os dados de teste (ex: <code>admin@sistema.com</code> e <code>admin</code>).</li></ul><ul id="3faf74c6-528d-80ee-9d35-dd7caf08c633" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Clique no botão verde <strong>Save 1 change</strong> para guardar.</li></ul><figure id="3faf74c6-528d-80cb-9f55-c13461ae9bd3" class="image" data-notion-image="image.png" dir="ltr"><a href="image.png"><img style="width:1312.7874755859375px" src="image.png"/></a></figure><h3 id="3faf74c6-528d-800b-b8c9-d96d93484d99" class="" dir="auto">2. Script SQL Obrigatório (Entrega 3)</h3><p id="3faf74c6-528d-80af-9df9-ff5b7688e5aa" class="" dir="auto">Após o Prisma criar as tabelas, execute este script diretamente no SGBD (MySQL Workbench) para criar a view exigida e popular os dados mínimos.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" integrity="sha512-sijCOJblSCXYYmXdwvqV0tak8QJW5iy2yLB1wAbbLc3OOIueqymizRFWUS/mwKctnzPKpNdPJV3aK1zlDMJmXQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3faf74c6-528d-808b-8459-da65e1307349" class="code code-wrap" data-notion-code-syntax="sql"><code class="language-sql" style="white-space:pre-wrap;word-break:break-all">USE saep_db;
+
+INSERT INTO Usuario (nome, email, senha) VALUES
+(&#x27;Wellington&#x27;, &#x27;wellington@sistema.com&#x27;, &#x27;senha123&#x27;),
+(&#x27;Admin Almoxarifado&#x27;, &#x27;admin@sistema.com&#x27;, &#x27;admin123&#x27;),
+(&#x27;Operador&#x27;, &#x27;operador@sistema.com&#x27;, &#x27;op123&#x27;);
+
+INSERT INTO Produto (codigo, descricao, quantidade, valor_unitario, estoque_minimo) VALUES
+(&#x27;PRD001&#x27;, &#x27;Cimento CP II 50kg&#x27;, 100, 35.50, 20),
+(&#x27;PRD002&#x27;, &#x27;Tinta Acrílica Branca 18L&#x27;, 50, 120.00, 10),
+(&#x27;PRD003&#x27;, &#x27;Argamassa ACIII 20kg&#x27;, 200, 25.90, 50);
+
+INSERT INTO Movimentacao (produto_id, usuario_id, tipo, quantidade) VALUES
+(1, 1, &#x27;ENTRADA&#x27;, 100),
+(2, 2, &#x27;ENTRADA&#x27;, 50),
+(3, 3, &#x27;ENTRADA&#x27;, 200);
+
+CREATE VIEW vw_estoque AS
+SELECT
+    codigo,
+    descricao,
+    quantidade AS quantidade_registrada,
+    valor_unitario,
+    (quantidade * valor_unitario) AS valor_total_item
+FROM Produto;</code></pre><h3 id="3faf74c6-528d-80cb-8642-f118338863a1" class="" dir="auto">3. Documentação SAEP (Entregas 1, 8 e 9)</h3><p id="3faf74c6-528d-805f-b1fa-cbdc1ab6edd3" class="" dir="auto"><strong>Entrega 1: Requisitos Funcionais</strong></p><ul id="3faf74c6-528d-8061-9ec6-ff8f340ea962" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>RF01 - Autenticação:</strong> O sistema deve permitir que o utilizador inicie sessão com e-mail e palavra-passe.</li></ul><ul id="3faf74c6-528d-8021-bc07-df4e796a8a01" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>RF02 - Gestão de Produtos:</strong> O sistema deve permitir registar, listar, procurar, atualizar e eliminar produtos.</li></ul><ul id="3faf74c6-528d-8024-a37d-e2ada6dfda17" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>RF03 - Movimentações:</strong> O sistema deve registar entradas e saídas de stock, atualizando o saldo automaticamente.</li></ul><ul id="3faf74c6-528d-80fe-8fab-eb0cb82d496a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>RF04 - Alerta de Stock:</strong> O sistema deve emitir um aviso visual caso uma saída deixe a quantidade igual ou inferior ao limite mínimo.</li></ul><p id="3faf74c6-528d-807e-be01-d26550263c46" class="" dir="auto"><strong>Entrega 8: Casos de Teste de Software</strong></p><table id="3faf74c6-528d-8004-b83a-c8250d49f009" class="simple-table" dir="ltr"><tbody><tr id="3faf74c6-528d-803e-919b-fe11cb3711ad" dir="ltr"><td id="TAc}" class=""><strong>ID</strong></td><td id="@~Fj" class=""><strong>ID Requisito</strong></td><td id="xmfx" class=""><strong>Descrição</strong></td><td id="=Pg\" class=""><strong>Precondição</strong></td><td id="^AwL" class=""><strong>Passos</strong></td><td id="Wyj?" class=""><strong>Resultado esperado</strong></td></tr><tr id="3faf74c6-528d-8057-9632-f99e6a96a248" dir="ltr"><td id="TAc}" class="">CT01</td><td id="@~Fj" class="">RF02</td><td id="xmfx" class="">Verificar o registo de um novo produto.</td><td id="=Pg\" class="">Utilizador com sessão iniciada.</td><td id="^AwL" class="">1. Aceder a cadastro<br/><br/>2. Inserir dados<br/><br/>3. Clicar em &quot;Guardar&quot;</td><td id="Wyj?" class="">Produto registado na base de dados e listado no ecrã.</td></tr><tr id="3faf74c6-528d-80ee-904f-ddd994e26e0f" dir="ltr"><td id="TAc}" class="">CT02</td><td id="@~Fj" class="">RF01</td><td id="xmfx" class="">Testar login do utilizador.</td><td id="=Pg\" class="">Utilizador registado na BD.</td><td id="^AwL" class="">1. Aceder a login<br/><br/>2. Inserir credenciais<br/><br/>3. Entrar</td><td id="Wyj?" class="">Autenticar utilizador e reencaminhar para o painel principal.</td></tr></tbody></table><p id="3faf74c6-528d-8043-bd44-f99f5264db97" class="" dir="auto"><strong>Entrega 9: Infraestrutura</strong></p><ul id="3faf74c6-528d-804d-8b4d-da205c0ddee0" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>SGBD:</strong> MySQL 8.0.</li></ul><ul id="3faf74c6-528d-802c-8043-c860a1a10f84" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Linguagens/Frameworks:</strong> TypeScript, Node.js, Next.js 15 (App Router).</li></ul><ul id="3faf74c6-528d-8059-b379-dc5179c62f08" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>ORM:</strong> Prisma ORM v5.</li></ul><h2 id="3faf74c6-528d-80dd-b3e9-ca63df3aa2c7" class="" dir="auto">🧠 Fase 2: Entidades e Interfaces (<code>src/entities</code> e <code>src/interfaces</code>)</h2><p id="3faf74c6-528d-8027-bd80-e55fe7887022" class="" dir="auto"><code><strong>src/interfaces/index.ts</strong></code></p><pre id="3faf74c6-528d-801f-8f35-c4aa0e06b31c" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">export interface UsuarioProps {
+    id?: number;
+    nome: string;
+    email: string;
+    senha?: string;
+}
+
+export interface ProdutoProps {
+    id?: number;
+    codigo: string;
+    descricao: string;
+    quantidade: number;
+    valorUnitario: number;
+    estoqueMinimo: number;
+}
+
+export interface MovimentacaoProps {
+    id?: number;
+    produtoId: number;
+    usuarioId: number;
+    tipo: &#x27;ENTRADA&#x27; | &#x27;SAIDA&#x27;;
+    quantidade: number;
+    data?: Date;
+}</code></pre><p id="3faf74c6-528d-8070-8153-d815e76a2ddf" class="" dir="auto"><code><strong>src/entities/UsuarioEntity.ts</strong></code></p><pre id="3faf74c6-528d-80c5-9fa4-fe9bf976beab" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { UsuarioProps } from &#x27;../interfaces&#x27;;
+export class UsuarioEntity{
+    constructor(private props: UsuarioProps) {}
+    public get getId() { return this.props.id; }
+    public get getNome() { return this.props.nome; }
+    public get getEmail() { return this.props.email; }
+    public get getSenha() { return this.props.senha; }
+}</code></pre><p id="3faf74c6-528d-802f-928b-e2ec74cce175" class="" dir="auto"><code><strong>src/entities/ProdutoEntity.ts</strong></code></p><pre id="3faf74c6-528d-8030-9ed4-e279b91d3435" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { ProdutoProps } from &#x27;../interfaces&#x27;;
+export class ProdutoEntity{
+    constructor(private props: ProdutoProps) {}
+    public get getId() { return this.props.id; }
+    public get getCodigo() { return this.props.codigo; }
+    public get getDescricao() { return this.props.descricao; }
+    public get getQuantidade() { return this.props.quantidade; }
+    public get getValorUnitario() { return this.props.valorUnitario; }
+    public get getEstoqueMinimo() { return this.props.estoqueMinimo; }
+    public set setQuantidade(novaQtd: number) { this.props.quantidade = novaQtd; }
+    public isEstoqueBaixo(): boolean { return this.props.quantidade &lt;= this.props.estoqueMinimo; }
+}</code></pre><p id="3faf74c6-528d-80a5-83b7-efecedcd167a" class="" dir="auto"><code><strong>src/entities/MovimentacaoEntity.ts</strong></code></p><pre id="3faf74c6-528d-804d-b1b6-d32806a8259a" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { MovimentacaoProps } from &#x27;../interfaces&#x27;;
+export class MovimentacaoEntity{
+    constructor(private props: MovimentacaoProps) {}
+    public get getId() { return this.props.id; }
+    public get getProdutoId() { return this.props.produtoId; }
+    public get getUsuarioId() { return this.props.usuarioId; }
+    public get getTipo() { return this.props.tipo; }
+    public get getQuantidade() { return this.props.quantidade; }
+    public get getData() { return this.props.data; }
+}</code></pre><h2 id="3faf74c6-528d-80f8-8ad4-fc9834cdf07b" class="" dir="auto">🗄️ Fase 3: Repositórios (<code>src/repositories</code>)</h2><p id="3faf74c6-528d-805b-b648-c5d4c32abd8c" class="" dir="auto"><code><strong>src/repositories/UsuarioRepository.ts</strong></code></p><pre id="3faf74c6-528d-80bc-be97-ff421ac50b0e" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import prisma from &#x27;@/src/lib/prisma&#x27;;
+import { UsuarioEntity } from &#x27;../entities/UsuarioEntity&#x27;;
+import { UsuarioProps } from &#x27;../interfaces&#x27;;
+
+export class UsuarioRepository {
+    async listarTodos(): Promise&lt;UsuarioEntity[]&gt; {
+        const users = await prisma.usuario.findMany();
+        return users.map(u =&gt; new UsuarioEntity({ id: u.id, nome: u.nome, email: u.email, senha: u.senha }));
+    }
+
+    async buscarPorId(id: number): Promise&lt;UsuarioEntity | null&gt; {
+        const u = await prisma.usuario.findUnique({ where: { id } });
+        return u ? new UsuarioEntity({ id: u.id, nome: u.nome, email: u.email, senha: u.senha }) : null;
+    }
+
+    async buscarPorEmail(email: string): Promise&lt;UsuarioEntity | null&gt; {
+        const u = await prisma.usuario.findUnique({ where: { email } });
+        return u ? new UsuarioEntity({ id: u.id, nome: u.nome, email: u.email, senha: u.senha }) : null;
+    }
+
+    async criar(props: UsuarioProps): Promise&lt;UsuarioEntity&gt; {
+        const u = await prisma.usuario.create({
+            data: { nome: props.nome, email: props.email, senha: props.senha! }
+        });
+        return new UsuarioEntity({ id: u.id, nome: u.nome, email: u.email, senha: u.senha });
+    }
+
+    async atualizar(id: number, props: Partial&lt;UsuarioProps&gt;): Promise&lt;UsuarioEntity&gt; {
+        const u = await prisma.usuario.update({
+            where: { id },
+            data: { nome: props.nome, email: props.email, senha: props.senha }
+        });
+        return new UsuarioEntity({ id: u.id, nome: u.nome, email: u.email, senha: u.senha });
+    }
+
+    async excluir(id: number): Promise&lt;void&gt; {
+        await prisma.usuario.delete({ where: { id } });
+    }
+}</code></pre><p id="3faf74c6-528d-80d4-88d5-fb7b5f1e6a73" class="" dir="auto"><code><strong>src/repositories/ProdutoRepository.ts</strong></code></p><pre id="3faf74c6-528d-802d-84e5-e44345ea1942" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import prisma from &#x27;@/src/lib/prisma&#x27;;
+import { ProdutoEntity } from &#x27;../entities/ProdutoEntity&#x27;;
+import { ProdutoProps } from &#x27;../interfaces&#x27;;
+
+export class ProdutoRepository {
+    async listarTodos(): Promise&lt;ProdutoEntity[]&gt; {
+        const prods = await prisma.produto.findMany({ orderBy: { descricao: &#x27;asc&#x27; } });
+        return prods.map(p =&gt; new ProdutoEntity({
+            id: p.id,
+            codigo: p.codigo,
+            descricao: p.descricao,
+            quantidade: p.quantidade,
+            valorUnitario: Number(p.valor_unitario),
+            estoqueMinimo: p.estoque_minimo
+        }));
+    }
+
+    async buscarPorId(id: number): Promise&lt;ProdutoEntity | null&gt; {
+        const p = await prisma.produto.findUnique({ where: { id } });
+        return p ? new ProdutoEntity({
+            id: p.id,
+            codigo: p.codigo,
+            descricao: p.descricao,
+            quantidade: p.quantidade,
+            valorUnitario: Number(p.valor_unitario),
+            estoqueMinimo: p.estoque_minimo
+        }) : null;
+    }
+
+    async criar(props: ProdutoProps): Promise&lt;ProdutoEntity&gt; {
+        const p = await prisma.produto.create({
+            data: {
+                codigo: props.codigo,
+                descricao: props.descricao,
+                quantidade: props.quantidade,
+                valor_unitario: props.valorUnitario,
+                estoque_minimo: props.estoqueMinimo
+            }
+        });
+        return new ProdutoEntity({
+            id: p.id,
+            codigo: p.codigo,
+            descricao: p.descricao,
+            quantidade: p.quantidade,
+            valorUnitario: Number(p.valor_unitario),
+            estoqueMinimo: p.estoque_minimo
+        });
+    }
+
+    async atualizar(id: number, props: Partial&lt;ProdutoProps&gt;): Promise&lt;ProdutoEntity&gt; {
+        const p = await prisma.produto.update({
+            where: { id },
+            data: {
+                codigo: props.codigo,
+                descricao: props.descricao,
+                quantidade: props.quantidade,
+                valor_unitario: props.valorUnitario,
+                estoque_minimo: props.estoqueMinimo
+            }
+        });
+        return new ProdutoEntity({
+            id: p.id,
+            codigo: p.codigo,
+            descricao: p.descricao,
+            quantidade: p.quantidade,
+            valorUnitario: Number(p.valor_unitario),
+            estoqueMinimo: p.estoque_minimo
+        });
+    }
+
+    async excluir(id: number): Promise&lt;void&gt; {
+        await prisma.produto.delete({ where: { id } });
+    }
+}</code></pre><p id="3faf74c6-528d-8035-8a12-c0aa893112ad" class="" dir="auto"><code><strong>src/repositories/MovimentacaoRepository.ts</strong></code></p><pre id="3faf74c6-528d-8051-b079-efb3e608df3f" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import prisma from &#x27;@/src/lib/prisma&#x27;;
+import { MovimentacaoEntity } from &#x27;../entities/MovimentacaoEntity&#x27;;
+import { MovimentacaoProps } from &#x27;../interfaces&#x27;;
+
+export class MovimentacaoRepository {
+    async listarTodos(): Promise&lt;MovimentacaoEntity[]&gt; {
+        const movs = await prisma.movimentacao.findMany();
+        return movs.map(m =&gt; new MovimentacaoEntity({
+            id: m.id,
+            produtoId: m.produto_id,
+            usuarioId: m.usuario_id,
+            tipo: m.tipo as any,
+            quantidade: m.quantidade,
+            data: m.data_movimentacao
+        }));
+    }
+
+    async buscarPorId(id: number): Promise&lt;MovimentacaoEntity | null&gt; {
+        const m = await prisma.movimentacao.findUnique({ where: { id } });
+        return m ? new MovimentacaoEntity({
+            id: m.id,
+            produtoId: m.produto_id,
+            usuarioId: m.usuario_id,
+            tipo: m.tipo as any,
+            quantidade: m.quantidade,
+            data: m.data_movimentacao
+        }) : null;
+    }
+
+    async criar(props: MovimentacaoProps): Promise&lt;MovimentacaoEntity&gt; {
+        const m = await prisma.movimentacao.create({
+            data: {
+                produto_id: props.produtoId,
+                usuario_id: props.usuarioId,
+                tipo: props.tipo,
+                quantidade: props.quantidade
+            }
+        });
+        return new MovimentacaoEntity({
+            id: m.id,
+            produtoId: m.produto_id,
+            usuarioId: m.usuario_id,
+            tipo: m.tipo as any,
+            quantidade: m.quantidade,
+            data: m.data_movimentacao
+        });
+    }
+
+    async excluir(id: number): Promise&lt;void&gt; {
+        await prisma.movimentacao.delete({ where: { id } });
+    }
+}</code></pre><h2 id="3faf74c6-528d-8042-b5f4-ef923ca8196f" class="" dir="auto">⚙️ Fase 4: Serviços (<code>src/services</code>)</h2><p id="3faf74c6-528d-805f-8172-c8f694b3c4d0" class="" dir="auto"><code><strong>src/services/UsuarioService.ts</strong></code></p><pre id="3faf74c6-528d-8088-aa19-fc6c7ba89404" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">import { UsuarioRepository } from &#x27;../repositories/UsuarioRepository&#x27;;
+import { UsuarioProps } from &#x27;../interfaces&#x27;;
+
+export class UsuarioService {
+    constructor(private repo: UsuarioRepository) {}
+
+    async autenticar(email: string, senhaLimpa: string) {
+        const user = await this.repo.buscarPorEmail(email);
+        if (!user || user.getSenha !== senhaLimpa) {
+            throw new Error(&quot;Credenciais inválidas.&quot;);
+        }
+        return { id: user.getId, nome: user.getNome, email: user.getEmail };
+    }
+
+    async listar() {
+        const usuarios = await this.repo.listarTodos();
+        return usuarios.map(u =&gt; ({ id: u.getId, nome: u.getNome, email: u.getEmail }));
+    }
+
+    async buscar(id: number) {
+        const u = await this.repo.buscarPorId(id);
+        if (!u) throw new Error(&quot;Usuário não encontrado.&quot;);
+        return { id: u.getId, nome: u.getNome, email: u.getEmail };
+    }
+
+    async cadastrar(props: UsuarioProps) {
+        const u = await this.repo.criar(props);
+        return { id: u.getId, nome: u.getNome, email: u.getEmail };
+    }
+
+    async atualizar(id: number, props: Partial&lt;UsuarioProps&gt;) {
+        const u = await this.repo.atualizar(id, props);
+        return { id: u.getId, nome: u.getNome, email: u.getEmail };
+    }
+
+    async excluir(id: number) {
+        return await this.repo.excluir(id);
+    }
+}</code></pre><p id="3faf74c6-528d-80ee-b953-d0f90ae34d98" class="" dir="auto"><code><strong>src/services/ProdutoService.ts</strong></code></p><pre id="3faf74c6-528d-8004-89c8-dd8c39309376" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { ProdutoRepository } from &#x27;../repositories/ProdutoRepository&#x27;;
+import { ProdutoProps } from &#x27;../interfaces&#x27;;
+
+export class ProdutoService {
+    constructor(private repo: ProdutoRepository) {}
+
+    private mapper(p: any) {
+        return {
+            id: p.getId,
+            codigo: p.getCodigo,
+            descricao: p.getDescricao,
+            quantidade: p.getQuantidade,
+            valorUnitario: p.getValorUnitario,
+            estoqueMinimo: p.getEstoqueMinimo
+        };
+    }
+
+    async listar() {
+        const lista = await this.repo.listarTodos();
+        return lista.map(p =&gt; this.mapper(p));
+    }
+
+    async buscar(id: number) {
+        const p = await this.repo.buscarPorId(id);
+        if (!p) throw new Error(&quot;Produto não encontrado.&quot;);
+        return this.mapper(p);
+    }
+
+    async cadastrar(props: ProdutoProps) {
+        if (!props.codigo || !props.descricao) throw new Error(&quot;Código e Descrição são obrigatórios.&quot;);
+        const p = await this.repo.criar(props);
+        return this.mapper(p);
+    }
+
+    async atualizar(id: number, props: Partial&lt;ProdutoProps&gt;) {
+        await this.buscar(id);
+        const p = await this.repo.atualizar(id, props);
+        return this.mapper(p);
+    }
+
+    async excluir(id: number) {
+        await this.buscar(id);
+        return await this.repo.excluir(id);
+    }
+}</code></pre><p id="3faf74c6-528d-80bd-8072-eabefed13f1b" class="" dir="auto"><code><strong>src/services/MovimentacaoService.ts</strong></code></p><pre id="3faf74c6-528d-807f-8aaf-cda9a1b8440d" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { MovimentacaoRepository } from &#x27;../repositories/MovimentacaoRepository&#x27;;
+import { ProdutoRepository } from &#x27;../repositories/ProdutoRepository&#x27;;
+import { MovimentacaoProps } from &#x27;../interfaces&#x27;;
+
+export class MovimentacaoService {
+    constructor(
+        private movRepo: MovimentacaoRepository,
+        private prodRepo: ProdutoRepository
+    ) {}
+
+    async registrar(props: MovimentacaoProps) {
+        if (props.quantidade &lt;= 0) throw new Error(&quot;Quantidade deve ser maior que zero.&quot;);
+
+        const produto = await this.prodRepo.buscarPorId(props.produtoId);
+        if (!produto) throw new Error(&quot;Produto não encontrado.&quot;);
+
+        if (props.tipo === &#x27;SAIDA&#x27; &amp;&amp; produto.getQuantidade &lt; props.quantidade) {
+            throw new Error(&quot;Estoque insuficiente.&quot;);
+        }
+
+        const novoEstoque = props.tipo === &#x27;ENTRADA&#x27; 
+            ? produto.getQuantidade + props.quantidade 
+            : produto.getQuantidade - props.quantidade;
+
+        // Atualização utilizando o setter encapsulado na entidade
+        produto.setQuantidade = novoEstoque;
+
+        await this.prodRepo.atualizar(props.produtoId, { quantidade: novoEstoque });
+        await this.movRepo.criar(props);
+
+        if (props.tipo === &#x27;SAIDA&#x27; &amp;&amp; produto.isEstoqueBaixo()) {
+            return { sucesso: true, alerta: `Atenção: O estoque do produto ${produto.getDescricao()} atingiu o limite mínimo!` };
+        }
+
+        return { sucesso: true, alerta: null };
+    }
+
+    async listar() {
+        const lista = await this.movRepo.listarTodos();
+        return lista.map(m =&gt; ({
+            id: m.getId,
+            produtoId: m.getProdutoId,
+            usuarioId: m.getUsuarioId,
+            tipo: m.getTipo,
+            quantidade: m.getQuantidade,
+            data: m.getData
+        }));
+    }
+
+    async excluir(id: number) {
+        return await this.movRepo.excluir(id);
+    }
+}</code></pre><h2 id="3faf74c6-528d-805d-9c95-ece455d36a23" class="" dir="auto">🔌 Fase 5: Controllers (API Routes)</h2><h3 id="3faf74c6-528d-80f4-862e-f4550b46fe68" class="" dir="auto">Rotas de Usuário (<code>app/api/usuarios/route.ts</code> e <code>[id]</code>)</h3><p id="3faf74c6-528d-801b-8244-ff4e86ca1a5a" class="" dir="auto"><code><strong>app/api/usuarios/route.ts</strong></code></p><pre id="3faf74c6-528d-80ce-beb6-df8c846eecda" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { UsuarioService } from &#x27;@/src/services/UsuarioService&#x27;;
+import { UsuarioRepository } from &#x27;@/src/repositories/UsuarioRepository&#x27;;
+
+const service = new UsuarioService(new UsuarioRepository());
+
+export async function GET(){
+    try {
+        const usuarios = await service.listar();
+        return NextResponse.json(usuarios, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 500 });
+    }
+}
+
+export async function POST(req: Request){
+    try {
+        const body = await req.json();
+        const novoUsuario = await service.cadastrar(body);
+        return NextResponse.json(novoUsuario, { status: 201 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><p id="3faf74c6-528d-8040-9349-f4257f0b70e3" class="" dir="auto"><code><strong>app/api/usuarios/login/route.ts</strong></code></p><pre id="3faf74c6-528d-809e-964e-ce1b28e02884" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { UsuarioService } from &#x27;@/src/services/UsuarioService&#x27;;
+import { UsuarioRepository } from &#x27;@/src/repositories/UsuarioRepository&#x27;;
+
+const service = new UsuarioService(new UsuarioRepository());
+
+export async function POST(req: Request){
+    try {
+        const { email, senha } = await req.json();
+        const usuario = await service.autenticar(email, senha);
+        return NextResponse.json(usuario, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 401 });
+    }
+}</code></pre><p id="3faf74c6-528d-8061-8207-cf4c99d0ff58" class="" dir="auto"><code><strong>app/api/usuarios/[id]/route.ts</strong></code></p><pre id="3faf74c6-528d-80dc-a70e-d43ba5db2598" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { UsuarioService } from &#x27;@/src/services/UsuarioService&#x27;;
+import { UsuarioRepository } from &#x27;@/src/repositories/UsuarioRepository&#x27;;
+
+const service = new UsuarioService(new UsuarioRepository());
+
+export async function GET(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        const usuario = await service.buscar(Number(id));
+        return NextResponse.json(usuario, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 404 });
+    }
+}
+
+export async function PUT(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        const body = await req.json();
+        const usuarioAtualizado = await service.atualizar(Number(id), body);
+        return NextResponse.json(usuarioAtualizado, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}
+
+export async function DELETE(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        await service.excluir(Number(id));
+        return NextResponse.json({ mensagem: &quot;Usuário excluído com sucesso.&quot; }, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><h3 id="3faf74c6-528d-80f6-b95b-db7ca3f27f97" class="" dir="auto">2. Rotas de Produto (<code>app/api/produtos/route.ts</code> e <code>[id]</code>)</h3><p id="3faf74c6-528d-80b5-b10a-d707913ef498" class="" dir="auto"><code><strong>app/api/produtos/route.ts</strong></code></p><pre id="3faf74c6-528d-80c1-9b93-d7f650cb61e1" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { ProdutoService } from &#x27;@/src/services/ProdutoService&#x27;;
+import { ProdutoRepository } from &#x27;@/src/repositories/ProdutoRepository&#x27;;
+
+const service = new ProdutoService(new ProdutoRepository());
+
+export async function GET(){
+    try {
+        const produtos = await service.listar();
+        return NextResponse.json(produtos, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 500 });
+    }
+}
+
+export async function POST(req: Request){
+    try {
+        const body = await req.json();
+        const produtoCriado = await service.cadastrar(body);
+        return NextResponse.json(produtoCriado, { status: 201 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><p id="3faf74c6-528d-80c8-a756-f40405a99820" class="" dir="auto"><code><strong>app/api/produtos/[id]/route.ts</strong></code></p><pre id="3faf74c6-528d-80ba-82bd-dcfc7493f54a" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { ProdutoService } from &#x27;@/src/services/ProdutoService&#x27;;
+import { ProdutoRepository } from &#x27;@/src/repositories/ProdutoRepository&#x27;;
+
+const service = new ProdutoService(new ProdutoRepository());
+
+export async function GET(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        const produto = await service.buscar(Number(id));
+        return NextResponse.json(produto, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 404 });
+    }
+}
+
+export async function PUT(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        const body = await req.json();
+        const produtoAtualizado = await service.atualizar(Number(id), body);
+        return NextResponse.json(produtoAtualizado, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}
+
+export async function DELETE(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        await service.excluir(Number(id));
+        return NextResponse.json({ mensagem: &quot;Produto excluído com sucesso.&quot; }, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><h3 id="3faf74c6-528d-80e2-9b4b-f14b1e70cf28" class="" dir="auto">3. Rotas de Movimentação (<code>app/api/movimentacoes/route.ts</code> e <code>[id]</code>)</h3><p id="3faf74c6-528d-8008-80b1-ea5bdbf52276" class="" dir="auto"><code><strong>app/api/movimentacoes/route.ts</strong></code></p><pre id="3faf74c6-528d-8089-b42f-f0102b664ecc" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { MovimentacaoService } from &#x27;@/src/services/MovimentacaoService&#x27;;
+import { MovimentacaoRepository } from &#x27;@/src/repositories/MovimentacaoRepository&#x27;;
+import { ProdutoRepository } from &#x27;@/src/repositories/ProdutoRepository&#x27;;
+
+const service = new MovimentacaoService(
+    new MovimentacaoRepository(),
+    new ProdutoRepository()
+);
+
+export async function GET(){
+    try {
+        const movimentacoes = await service.listar();
+        return NextResponse.json(movimentacoes, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 500 });
+    }
+}
+
+export async function POST(req: Request){
+    try {
+        const body = await req.json();
+        const resultado = await service.registrar(body);
+        return NextResponse.json(resultado, { status: 201 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><p id="3faf74c6-528d-807a-8be8-d05ffb784d7c" class="" dir="auto"><code><strong>app/api/movimentacoes/[id]/route.ts</strong></code></p><pre id="3faf74c6-528d-80a0-bd39-dad90eb3b7d8" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import { NextResponse } from &#x27;next/server&#x27;;
+import { MovimentacaoService } from &#x27;@/src/services/MovimentacaoService&#x27;;
+import { MovimentacaoRepository } from &#x27;@/src/repositories/MovimentacaoRepository&#x27;;
+import { ProdutoRepository } from &#x27;@/src/repositories/ProdutoRepository&#x27;;
+
+const service = new MovimentacaoService(
+    new MovimentacaoRepository(),
+    new ProdutoRepository()
+);
+
+export async function DELETE(req: Request, { params }: { params: Promise&lt;{ id: string }&gt; }){
+    try {
+        const { id } = await params;
+        await service.excluir(Number(id));
+        return NextResponse.json({ mensagem: &quot;Movimentação removida.&quot; }, { status: 200 });
+    } catch (e: any) {
+        return NextResponse.json({ erro: e.message }, { status: 400 });
+    }
+}</code></pre><h2 id="3faf74c6-528d-804f-8779-e7a5e40e3d92" class="" dir="auto">💻 Fase 6: Frontend (Configurações e Ecrãs)</h2><p id="3faf74c6-528d-8097-b16c-d0535d64d773" class="" dir="auto"><strong>1. Configuração Global e Layout</strong></p><p id="3faf74c6-528d-80bf-af07-f97f7a781939" class="" dir="auto"><code>app/layout.tsx</code></p><pre id="3faf74c6-528d-8092-8a2b-c32f05346cc6" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import type { Metadata } from &quot;next&quot;;
+import &quot;./globals.css&quot;;
+
+export const metadata: Metadata = {
+  title: &quot;Sistema de Controlo de Stock - SAEP&quot;,
+  description: &quot;Gestão de almoxarifado&quot;,
+};
+
+export default function RootLayout({ children }: Readonly&lt;{ children: React.ReactNode; }&gt;) {
+  return (
+    &lt;html lang=&quot;pt-PT&quot;&gt;
+      &lt;body className=&quot;bg-slate-50 min-h-screen text-slate-900 antialiased&quot;&gt;
+        {children}
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre><p id="3faf74c6-528d-80c0-aecb-feb4d4e8cc86" class="" dir="auto"><strong>2. Instância Axios</strong></p><p id="3faf74c6-528d-806f-9ee7-e5662702cf44" class="" dir="auto"><code>app/lib/api.ts</code></p><pre id="3faf74c6-528d-80fb-b8a6-db62ac6df249" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import axios from &#x27;axios&#x27;;
+const api = axios.create({
+    baseURL: &#x27;/api&#x27;,
+    headers: { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+});
+export default api;</code></pre><p id="3faf74c6-528d-8089-a14c-dc7580939260" class="" dir="auto"><strong>3. Ecrã de Autenticação (Login)</strong></p><p id="3faf74c6-528d-80fc-96d3-c345b1a884fd" class="" dir="auto"><code>app/login/page.tsx</code></p><pre id="3faf74c6-528d-808f-9e11-ed23a23c847b" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">&#x27;use client&#x27;;
+import { useState } from &#x27;react&#x27;;
+import { useRouter } from &#x27;next/navigation&#x27;;
+import api from &#x27;../lib/api&#x27;;
+import Swal from &#x27;sweetalert2&#x27;;
+
+export default function Login() {
+    const [email, setEmail] = useState(&#x27;&#x27;);
+    const [senha, setSenha] = useState(&#x27;&#x27;);
+    const router = useRouter();
+
+    const handleLogin = async (e: React.FormEvent) =&gt; {
+        e.preventDefault();
+        try {
+            const { data } = await api.post(&#x27;/usuarios/login&#x27;, { email, senha });
+            localStorage.setItem(&#x27;userLogado&#x27;, JSON.stringify(data));
+            router.push(&#x27;/dashboard&#x27;);
+        } catch {
+            Swal.fire(&#x27;Falha&#x27;, &#x27;Motivo: Credenciais incorretas.&#x27;, &#x27;error&#x27;);
+            setSenha(&#x27;&#x27;);
+        }
+    };
+
+    return (
+        &lt;div className=&quot;flex h-screen items-center justify-center bg-slate-100&quot;&gt;
+            &lt;form onSubmit={handleLogin} className=&quot;bg-white p-8 rounded-lg shadow-lg w-96 border&quot;&gt;
+                &lt;h2 className=&quot;text-2xl font-bold mb-6 text-center text-slate-800&quot;&gt;Acesso ao Almoxarifado&lt;/h2&gt;
+                &lt;input type=&quot;email&quot; placeholder=&quot;E-mail&quot; required value={email} onChange={e =&gt; setEmail(e.target.value)} className=&quot;w-full mb-4 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                &lt;input type=&quot;password&quot; placeholder=&quot;Palavra-passe&quot; required value={senha} onChange={e =&gt; setSenha(e.target.value)} className=&quot;w-full mb-6 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                &lt;button type=&quot;submit&quot; className=&quot;w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded font-semibold transition-colors&quot;&gt;Entrar&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    );
+}</code></pre><p id="3faf74c6-528d-804e-aa9f-d6a7bbbec399" class="" dir="auto"><strong>4. Painel Principal (Dashboard)</strong></p><p id="3faf74c6-528d-80f1-872a-cae1b5034916" class="" dir="auto"><code>app/dashboard/page.tsx</code></p><pre id="3faf74c6-528d-80b1-b8fa-fdc1f4d93f11" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">&#x27;use client&#x27;;
+import Link from &#x27;next/link&#x27;;
+import { useEffect, useState } from &#x27;react&#x27;;
+import { useRouter } from &#x27;next/navigation&#x27;;
+
+export default function Dashboard() {
+    const [nome, setNome] = useState(&#x27;&#x27;);
+    const router = useRouter();
+
+    useEffect(() =&gt; {
+        const user = localStorage.getItem(&#x27;userLogado&#x27;);
+        if (user) setNome(JSON.parse(user).nome);
+        else router.push(&#x27;/login&#x27;);
+    }, [router]);
+
+    return (
+        &lt;div className=&quot;min-h-screen bg-slate-50 p-8&quot;&gt;
+            &lt;header className=&quot;flex justify-between items-center bg-white p-4 rounded shadow mb-8&quot;&gt;
+                &lt;h1 className=&quot;text-xl font-bold text-slate-800&quot;&gt;Utilizador: {nome}&lt;/h1&gt;
+                &lt;button onClick={() =&gt; { localStorage.clear(); router.push(&#x27;/login&#x27;); }} className=&quot;text-red-500 hover:text-red-700 font-medium&quot;&gt;Sair&lt;/button&gt;
+            &lt;/header&gt;
+            &lt;div className=&quot;grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto&quot;&gt;
+                &lt;Link href=&quot;/produtos&quot; className=&quot;p-8 bg-white rounded-xl shadow hover:shadow-md border-t-4 border-blue-500 text-center transition&quot;&gt;
+                    &lt;h2 className=&quot;text-2xl font-bold text-slate-800&quot;&gt;📦 Gestão de Produtos&lt;/h2&gt;
+                &lt;/Link&gt;
+                &lt;Link href=&quot;/movimentacao&quot; className=&quot;p-8 bg-white rounded-xl shadow hover:shadow-md border-t-4 border-emerald-500 text-center transition&quot;&gt;
+                    &lt;h2 className=&quot;text-2xl font-bold text-slate-800&quot;&gt;🔄 Controlo de Stock&lt;/h2&gt;
+                &lt;/Link&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    );
+}</code></pre><p id="3faf74c6-528d-8031-8438-fc2c79fe6d03" class="" dir="auto"><strong>5. Listagem de Produtos</strong></p><p id="3faf74c6-528d-80be-b01e-fed9021e6254" class="" dir="auto"><code>app/produtos/page.tsx</code></p><pre id="3faf74c6-528d-8012-af94-d3726d05068b" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">&#x27;use client&#x27;;
+import { useEffect, useState } from &#x27;react&#x27;;
+import Link from &#x27;next/link&#x27;;
+import api from &#x27;../lib/api&#x27;;
+import Swal from &#x27;sweetalert2&#x27;;
+
+export default function ListaProdutos() {
+    const [produtos, setProdutos] = useState&lt;any[]&gt;([]);
+    const [busca, setBusca] = useState(&#x27;&#x27;);
+
+    const carregar = async () =&gt; { const res = await api.get(&#x27;/produtos&#x27;); setProdutos(res.data); };
+    useEffect(() =&gt; { carregar(); }, []);
+
+    const excluir = async (id: number) =&gt; {
+        const confirmacao = await Swal.fire({ title: &#x27;Confirmar exclusão?&#x27;, icon: &#x27;warning&#x27;, showCancelButton: true });
+        if (confirmacao.isConfirmed) {
+            await api.delete(`/produtos/${id}`);
+            Swal.fire(&#x27;Eliminado!&#x27;, &#x27;Produto removido com sucesso.&#x27;, &#x27;success&#x27;);
+            carregar();
+        }
+    };
+
+    const filtrados = produtos.filter(p =&gt; p.descricao.toLowerCase().includes(busca.toLowerCase()));
+
+    return (
+        &lt;div className=&quot;p-8 max-w-5xl mx-auto&quot;&gt;
+            &lt;div className=&quot;flex justify-between mb-6 items-center&quot;&gt;
+                &lt;h1 className=&quot;text-2xl font-bold&quot;&gt;Catálogo de Produtos&lt;/h1&gt;
+                &lt;Link href=&quot;/dashboard&quot; className=&quot;text-slate-500 hover:underline&quot;&gt;Voltar ao Menu&lt;/Link&gt;
+            &lt;/div&gt;
+            &lt;div className=&quot;flex gap-4 mb-6&quot;&gt;
+                &lt;input type=&quot;text&quot; placeholder=&quot;Pesquisar produto...&quot; value={busca} onChange={e =&gt; setBusca(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-400&quot;/&gt;
+                &lt;Link href=&quot;/produtos/form&quot; className=&quot;bg-blue-600 text-white px-4 py-2 rounded whitespace-nowrap&quot;&gt;+ Novo Produto&lt;/Link&gt;
+            &lt;/div&gt;
+            &lt;table className=&quot;w-full bg-white shadow rounded border overflow-hidden&quot;&gt;
+                &lt;thead className=&quot;bg-slate-100 border-b&quot;&gt;
+                    &lt;tr&gt;&lt;th className=&quot;p-3 text-left&quot;&gt;Código&lt;/th&gt;&lt;th className=&quot;p-3 text-left&quot;&gt;Descrição&lt;/th&gt;&lt;th className=&quot;p-3 text-center&quot;&gt;Stock&lt;/th&gt;&lt;th className=&quot;p-3 text-center&quot;&gt;Ações&lt;/th&gt;&lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody className=&quot;divide-y&quot;&gt;
+                    {filtrados.map(p =&gt; (
+                        &lt;tr key={p.id}&gt;
+                            &lt;td className=&quot;p-3&quot;&gt;{p.codigo}&lt;/td&gt;
+                            &lt;td className=&quot;p-3 font-medium&quot;&gt;{p.descricao}&lt;/td&gt;
+                            &lt;td className=&quot;p-3 text-center&quot;&gt;{p.quantidade}&lt;/td&gt;
+                            &lt;td className=&quot;p-3 text-center space-x-4&quot;&gt;
+                                &lt;Link href={`/produtos/form?id=${p.id}`} className=&quot;text-blue-500 font-medium&quot;&gt;Editar&lt;/Link&gt;
+                                &lt;button onClick={() =&gt; excluir(p.id)} className=&quot;text-red-500 font-medium&quot;&gt;Eliminar&lt;/button&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    ))}
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+    );
+}</code></pre><p id="3faf74c6-528d-8041-b7ad-e72fdc01a325" class="" dir="auto"><strong>6. Formulário de Produto (Criar / Editar)</strong></p><p id="3faf74c6-528d-8018-9977-fa2660975d61" class="" dir="auto"><code>app/produtos/form/page.tsx</code></p><pre id="3faf74c6-528d-807a-bdf6-ca4ba56c3d0d" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">&#x27;use client&#x27;;
+import { useState, useEffect, Suspense } from &#x27;react&#x27;;
+import { useRouter, useSearchParams } from &#x27;next/navigation&#x27;;
+import Link from &#x27;next/link&#x27;;
+import api from &#x27;../../lib/api&#x27;;
+import Swal from &#x27;sweetalert2&#x27;;
+
+function FormularioProdutoContent() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const idParam = searchParams.get(&#x27;id&#x27;);
+
+    const [codigo, setCodigo] = useState(&#x27;&#x27;);
+    const [descricao, setDescricao] = useState(&#x27;&#x27;);
+    const [quantidade, setQuantidade] = useState(&#x27;&#x27;);
+    const [valorUnitario, setValorUnitario] = useState(&#x27;&#x27;);
+    const [estoqueMinimo, setEstoqueMinimo] = useState(&#x27;&#x27;);
+    const [editandoId, setEditandoId] = useState&lt;number | null&gt;(null);
+
+    useEffect(() =&gt; {
+        if (idParam) {
+            api.get(`/produtos/${idParam}`).then(res =&gt; {
+                const p = res.data;
+                setEditandoId(p.id); setCodigo(p.codigo); setDescricao(p.descricao);
+                setQuantidade(String(p.quantidade)); setValorUnitario(String(p.valorUnitario)); setEstoqueMinimo(String(p.estoqueMinimo));
+            });
+        }
+    }, [idParam]);
+
+    const salvar = async (e: React.FormEvent) =&gt; {
+        e.preventDefault();
+        const payload = { codigo, descricao, quantidade: Number(quantidade), valorUnitario: Number(valorUnitario), estoqueMinimo: Number(estoqueMinimo) };
+        try {
+            if (editandoId) await api.put(`/produtos/${editandoId}`, payload);
+            else await api.post(&#x27;/produtos&#x27;, payload);
+            await Swal.fire(&#x27;Sucesso!&#x27;, &#x27;Produto guardado com sucesso.&#x27;, &#x27;success&#x27;);
+            router.push(&#x27;/produtos&#x27;);
+        } catch (error: any) {
+            Swal.fire(&#x27;Erro!&#x27;, error.response?.data?.erro || &#x27;Erro ao guardar.&#x27;, &#x27;warning&#x27;);
+        }
+    };
+
+    return (
+        &lt;div className=&quot;max-w-2xl mx-auto p-8&quot;&gt;
+            &lt;div className=&quot;flex justify-between items-center mb-6&quot;&gt;
+                &lt;h1 className=&quot;text-2xl font-bold text-slate-800&quot;&gt;{editandoId ? &#x27;Editar Produto&#x27; : &#x27;Novo Produto&#x27;}&lt;/h1&gt;
+                &lt;Link href=&quot;/produtos&quot; className=&quot;text-slate-500 hover:underline&quot;&gt;Cancelar&lt;/Link&gt;
+            &lt;/div&gt;
+            &lt;form onSubmit={salvar} className=&quot;bg-white p-6 rounded-lg shadow border space-y-4&quot;&gt;
+                &lt;div&gt;
+                    &lt;label className=&quot;block text-sm font-medium text-slate-700 mb-1&quot;&gt;Código do Produto&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; required value={codigo} onChange={e =&gt; setCodigo(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    &lt;label className=&quot;block text-sm font-medium text-slate-700 mb-1&quot;&gt;Descrição&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; required value={descricao} onChange={e =&gt; setDescricao(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;grid grid-cols-3 gap-4&quot;&gt;
+                    &lt;div&gt;
+                        &lt;label className=&quot;block text-sm font-medium text-slate-700 mb-1&quot;&gt;Quantidade&lt;/label&gt;
+                        &lt;input type=&quot;number&quot; required value={quantidade} onChange={e =&gt; setQuantidade(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                    &lt;/div&gt;
+                    &lt;div&gt;
+                        &lt;label className=&quot;block text-sm font-medium text-slate-700 mb-1&quot;&gt;Preço Unitário&lt;/label&gt;
+                        &lt;input type=&quot;number&quot; step=&quot;0.01&quot; required value={valorUnitario} onChange={e =&gt; setValorUnitario(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                    &lt;/div&gt;
+                    &lt;div&gt;
+                        &lt;label className=&quot;block text-sm font-medium text-slate-700 mb-1&quot;&gt;Stock Mínimo&lt;/label&gt;
+                        &lt;input type=&quot;number&quot; required value={estoqueMinimo} onChange={e =&gt; setEstoqueMinimo(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500&quot; /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;button type=&quot;submit&quot; className=&quot;w-full mt-4 bg-blue-600 text-white p-2 rounded font-medium hover:bg-blue-700 transition&quot;&gt;Guardar Produto&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    );
+}
+
+export default function FormularioProduto() {
+    return (
+        &lt;Suspense fallback={&lt;div className=&quot;p-8 text-center&quot;&gt;A carregar...&lt;/div&gt;}&gt;
+            &lt;FormularioProdutoContent /&gt;
+        &lt;/Suspense&gt;
+    );
+}</code></pre><p id="3faf74c6-528d-80b2-b70d-ee0afbf2c90b" class="" dir="auto"><strong>7. Registo de Movimentação</strong></p><p id="3faf74c6-528d-80a3-a6a2-d49c81db6f48" class="" dir="auto"><code>app/movimentacao/page.tsx</code></p><pre id="3faf74c6-528d-802b-bd78-c8554d6a924c" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">&#x27;use client&#x27;;
+import { useState, useEffect } from &#x27;react&#x27;;
+import api from &#x27;../lib/api&#x27;;
+import Swal from &#x27;sweetalert2&#x27;;
+import Link from &#x27;next/link&#x27;;
+
+export default function MovimentacaoEstoque() {
+    const [produtos, setProdutos] = useState&lt;any[]&gt;([]);
+    const [produtoId, setProdutoId] = useState(&#x27;&#x27;);
+    const [tipo, setTipo] = useState(&#x27;SAIDA&#x27;);
+    const [quantidade, setQuantidade] = useState(&#x27;&#x27;);
+
+    useEffect(() =&gt; { api.get(&#x27;/produtos&#x27;).then(res =&gt; setProdutos(res.data)); }, []);
+
+    const registrar = async (e: React.FormEvent) =&gt; {
+        e.preventDefault();
+        const user = JSON.parse(localStorage.getItem(&#x27;userLogado&#x27;) || &#x27;{}&#x27;);
+        try {
+            const res = await api.post(&#x27;/movimentacoes&#x27;, { produtoId: Number(produtoId), tipo, quantidade: Number(quantidade), usuarioId: user.id });
+            if (res.data.alerta) Swal.fire(&#x27;Aviso: Stock Baixo!&#x27;, res.data.alerta, &#x27;warning&#x27;);
+            else Swal.fire(&#x27;Sucesso!&#x27;, &#x27;Movimentação registada.&#x27;, &#x27;success&#x27;);
+            setQuantidade(&#x27;&#x27;);
+        } catch (error: any) {
+            Swal.fire(&#x27;Erro!&#x27;, error.response?.data?.erro || &quot;Erro ao registar&quot;, &#x27;error&#x27;);
+        }
+    };
+
+    return (
+        &lt;div className=&quot;p-8 max-w-2xl mx-auto&quot;&gt;
+            &lt;div className=&quot;flex justify-between items-center mb-6&quot;&gt;
+                &lt;h1 className=&quot;text-2xl font-bold&quot;&gt;Movimentações de Stock&lt;/h1&gt;
+                &lt;Link href=&quot;/dashboard&quot; className=&quot;text-blue-600 hover:underline&quot;&gt;Voltar&lt;/Link&gt;
+            &lt;/div&gt;
+            &lt;form onSubmit={registrar} className=&quot;bg-white p-6 rounded shadow border&quot;&gt;
+                &lt;div className=&quot;mb-4&quot;&gt;
+                    &lt;label className=&quot;block mb-2 font-medium&quot;&gt;Produto:&lt;/label&gt;
+                    &lt;select required value={produtoId} onChange={e =&gt; setProdutoId(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-emerald-500&quot;&gt;
+                        &lt;option value=&quot;&quot;&gt;Selecione um produto...&lt;/option&gt;
+                        {produtos.map(p =&gt; (&lt;option key={p.id} value={p.id}&gt;{p.descricao} (Stock atual: {p.quantidade})&lt;/option&gt;))}
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;grid grid-cols-2 gap-4 mb-6&quot;&gt;
+                    &lt;div&gt;
+                        &lt;label className=&quot;block mb-2 font-medium&quot;&gt;Tipo:&lt;/label&gt;
+                        &lt;select value={tipo} onChange={e =&gt; setTipo(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-emerald-500&quot;&gt;
+                            &lt;option value=&quot;ENTRADA&quot;&gt;Entrada (+)&lt;/option&gt;
+                            &lt;option value=&quot;SAIDA&quot;&gt;Saída (-)&lt;/option&gt;
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+                    &lt;div&gt;
+                        &lt;label className=&quot;block mb-2 font-medium&quot;&gt;Quantidade:&lt;/label&gt;
+                        &lt;input type=&quot;number&quot; required value={quantidade} onChange={e =&gt; setQuantidade(e.target.value)} className=&quot;w-full p-2 border rounded outline-none focus:ring-2 focus:ring-emerald-500&quot;/&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;button type=&quot;submit&quot; className=&quot;w-full bg-emerald-600 text-white p-3 rounded font-bold hover:bg-emerald-700&quot;&gt;Guardar Movimentação&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    );
+}</code></pre><p id="3faf74c6-528d-80d9-8198-c70031e60e9c" class="" dir="auto">
+</p><p id="3faf74c6-528d-8073-8d65-fa7cfe2d833e" class="" dir="auto"><strong>8. Página inicial</strong></p><p id="3faf74c6-528d-802c-9a04-f677db88e004" class="" dir="auto"><code>app/page.tsx</code></p><pre id="3faf74c6-528d-8066-9d6e-d584a04dfa2c" class="code code-wrap" data-notion-code-syntax="tsx"><code class="language-tsx" style="white-space:pre-wrap;word-break:break-all">import Link from &quot;next/link&quot;;
+
+export default function Home() {
+  return (
+    &lt;main className=&quot;flex min-h-screen flex-col items-center justify-center bg-slate-50 p-8 text-center&quot;&gt;
+      &lt;div className=&quot;bg-white p-12 rounded-2xl shadow-lg border max-w-lg w-full&quot;&gt;
+        &lt;h1 className=&quot;text-4xl font-bold text-slate-800 mb-4&quot;&gt;
+          📦 Controlo de Stock
+        &lt;/h1&gt;
+        &lt;p className=&quot;text-slate-600 mb-8 text-lg&quot;&gt;
+          Bem-vindo ao sistema de gestão de almoxarifado. Por favor, inicie sessão para aceder ao painel.
+        &lt;/p&gt;
+        &lt;Link 
+          href=&quot;/login&quot; 
+          className=&quot;inline-block w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-sm&quot;
+        &gt;
+          Aceder ao Sistema
+        &lt;/Link&gt;
+      &lt;/div&gt;
+    &lt;/main&gt;
+  );
+}</code></pre></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
